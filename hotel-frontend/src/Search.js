@@ -1,31 +1,45 @@
-import React, { useState, useEffect } from "react";
-
-let Search = () => {
-  let [github, setGithub] = useState([]);
-  let [searchString, setSearchString] = useState("");
+import React, { useState } from "react";
+import useInfiniteScroll from 'react-infinite-scroll-hook';
 
 
-  useEffect(() => {
+const Search = () => {
+  const [searchString, setSearchString] = useState("");
+  const [items, setItems] = useState([]);
+  const [hasNextPage, setHasNextPage] = useState();
+  const [page, setPage] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const handleLoadMore = () => {
+    setLoading(true);
     fetch(
-      `http://localhost:4000/search/repositories?q=${searchString}`,
+      `http://localhost:4000/search/repositories?q=${searchString}&pages=${page}`,
     )
-      .then(res => res.json())
-      .then(res => {
-         setGithub(res);
-      })
-      .catch(() => {
-        console.log("stop it");
-      });
-  }, [searchString]);
+    .then(res => res.json())
+    .then(res => {
+       console.log(res)
+       setLoading(false);
+       let total = res.total_count
+       let current = page * 30
+       let hasNextPage = (current <= total)
+       setHasNextPage(hasNextPage);
+       setItems([...items, res.items]);
+       setPage(page+1)
+    })
+    .catch(() => {
+      console.log("stop it");
+      setLoading(false);
+    });
+  }
 
-  
+  const infiniteRef = useInfiniteScroll({
+    loading,
+    hasNextPage,
+    onLoadMore: handleLoadMore,
+    scrollContainer,
+  });
+
+
   let onChange = e => setSearchString(e.target.value);
-
-  let renderSearch = (res) => {
-    console.log("calling render github");
-
-  };
-
 
   return (
     <div>
@@ -38,9 +52,13 @@ let Search = () => {
           onChange={e => onChange(e)}
         />
       </div>
-      <div className="githubSearchList">{renderSearch()}</div>
+       <ul ref={infiniteRef}>
+          {items.map((item) => (
+            <li key={item.id}>{item.full_name}</li>
+          ))}
+        {loading && <li>Loading...</li>}
+      </ul>
     </div>
   );
 };
-
 export default Search;
