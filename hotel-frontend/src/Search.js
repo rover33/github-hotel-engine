@@ -3,7 +3,10 @@ import React, { useState, useEffect } from "react";
 
 const Search = () => {
   const [query, setQuery] = useState("");
-  const [stars, setStars ] = useState();
+  const [starSort, setStarSort ] = useState({
+    stars: false
+  });
+  const [score, setScore ] = useState("");
   const [items, setItems] = useState([]);
   const [languages, setLanguages] = useState({
     JavaScript: false,
@@ -19,39 +22,33 @@ const Search = () => {
 
     const fetchData = async () => {
       const response = await fetch(
-        `http://localhost:5000/search/repositories?searchTerms=${query}&numStars=${stars}`
+        `http://localhost:5000/search/repositories?searchTerms=${query}+searchLang=${languages}&searchStars=${starSort}&searchScore=${score}`
       );
       const items = await response.json();
       setItems(items.items);
-      setStars(items.stars)
-      console.log(items.langauge)
     };
     fetchData()
-  }, [query, stars])
+  }, [query, starSort, score])
 
 
 
 
   const handleChange = (e) => {
       setItems([]);
-      setStars(stars)
       setQuery(e.target.value);
     }
-      
-  const handleSubmit = (e) => {
-      e.preventDefault();
-      // fetch search results
-    }
-
-  const checkBoxTypeClick = e => {
-    setStars(stars)
-  }
   
   const checkBoxLanguageClick = e => {
     let tempLanguage = { ...languages };
-    tempLanguage[e.target.language] != languages[e.target.langauge];
+    if (tempLanguage[e.target.name] !== languages[e.target.name]);
     setLanguages(tempLanguage);
   };
+
+  const checkBoxStarClick = e => {
+    let tempStars = {...starSort };
+    if (tempStars[e.target.name] !== starSort[e.target.name]) return;
+    setStarSort(tempStars);
+  }
 
   const checkIfType = (arr1, arr2) => {
     return arr1.some(item => arr2.includes(item))
@@ -61,14 +58,18 @@ const Search = () => {
 
   const renderItems = () => {
     let { Python, JavaScript, Ruby, Java, Swift} = languages;
+    let { stars } = starSort;
     let tempArr = new Set();
     let langArr = [];
+    let starArr = [];
     if (Python) langArr.push("Python");
     if (JavaScript) langArr.push("JavaScript");
     if (Java) langArr.push("Java")
     if (Ruby) langArr.push("Ruby");
     if (Swift) langArr.push("Swift")
-    if(langArr.length <= 0 && query.length <= 0 ){
+    if ( stars ) starArr.push("stars")
+    if(
+      langArr.length <= 0 && starArr.length <= 0 && query.length <= 0){
       tempArr = items;
     } else {
       for (let i = 0; i < items.length; i++) {
@@ -77,6 +78,9 @@ const Search = () => {
             tempArr.add(items[i]);
           }
         if (langArr.length > 0 && checkIfType(langArr, items[i].language)){
+          tempArr.add(items[i])
+        }
+        if (starArr.length > 0 && checkIfType(starArr, items[i].stargazers_count)){
           tempArr.add(items[i])
         }
       }
@@ -100,7 +104,7 @@ const Search = () => {
   return (
       <div>
         <h1 className="header">Github Search</h1>
-        <form className="Form" onSubmit={handleSubmit}>
+        <form className="Form">
           <input
               type="text"
               autoFocus
@@ -109,33 +113,74 @@ const Search = () => {
               onChange={handleChange}
               value={query}
             />
-          <button>Search</button>
         </form>
         <div className="checkBoxes">
-          <label>Sort by Stars</label>
-          <input
-            type="checkbox"
-            id="stars"
-            name="stars"
-            onClick={e => checkBoxTypeClick(e)}
-          >
-          </input>
-          <label>Sort by Score</label>
-          <input
-            type="checkbox"
-            id="score"
-            name="score"
-            onClick={e => checkBoxTypeClick(e)}
-          >
-          </input>
-          <label>Languages</label>
-          <input
-            type="checkbox"
-            id="Python"
-            name="Python"
-            onClick={e => checkBoxLanguageClick(e)}
-          >
-          </input>
+          <div>
+            Sort By:
+            <br/>
+            <label>Stars:</label>
+            <input
+              type="checkbox"
+              id="stars"
+              name="stars"
+              onClick={e => checkBoxStarClick(e)}
+            >
+            </input>
+            <label>Score:</label>
+            <input
+              type="checkbox"
+              id="score"
+              name="score"
+              // onClick={e => checkBoxTypeClick(e)}
+            >
+            </input>
+          </div>
+          <br/>
+          <br/>
+          <div className="langCheckBoxes">
+            Languages: 
+            <br />
+            <label>Python</label>
+            <input
+              type="checkbox"
+              id="Python"
+              name="Python"
+              onClick={e => checkBoxLanguageClick(e)}
+            >
+            </input>
+            <label>JavaScript</label>
+            <input
+              type="checkbox"
+              id="JavaScript"
+              name="JavaScript"
+              // onClick={e => checkBoxLanguageClick(e)}
+            >
+            </input>
+            <label>Ruby</label>
+            <input
+              type="checkbox"
+              id="Ruby"
+              name="Ruby"
+              // onClick={e => checkBoxLanguageClick(e)}
+            >
+            </input>
+            <label>Swift</label>
+            <input
+              type="checkbox"
+              id="Swift"
+              name="Swift"
+              // onClick={e => checkBoxLanguageClick(e)}
+            >
+            </input>
+            <label>Java</label>
+            <input
+              type="checkbox"
+              id="Java"
+              name="Java"
+              // onClick={e => checkBoxLanguageClick(e)}
+            >
+            </input>
+          </div>
 
         </div>
         <ul>

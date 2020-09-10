@@ -43,10 +43,10 @@ const checkCache = (req, res, next) => {
 //  @desc Return github data for particular search term
 app.get("/search/repositories", checkCache, async (req, res) => {
   try {
-    const { searchTerms, numPages, numStars} = req.query
+    const { searchTerms, searchScore, searchStars, searchLang} = req.query
     console.log(searchTerms)
     const githubInfo = await axios.get(
-      `https://api.github.com/search/repositories?q=${searchTerms}&sort=${numStars}&pages=${numPages}`
+      `https://api.github.com/search/repositories?q=${searchTerms}+language=${searchLang}&sort=${searchStars}&sort=${searchScore}`
     );
 
     //get data from response
