@@ -22,7 +22,7 @@ const Search = () => {
 
     const fetchData = async () => {
       const response = await fetch(
-        `http://localhost:5000/search/repositories?searchTerms=${query}+searchLang=${languages}&searchStars=${starSort}&searchScore=${score}`
+        `http://localhost:5000/search/repositories?searchTerms=${query}+searchLang:${languages}&searchStars=${starSort}&searchScore=${score}`
       );
       const items = await response.json();
       setItems(items.items);
