@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useHistory, Route, Router, Link, NavLink } from "react-router-dom";
+import Details from "./Details";
 
 
 const Search = () => {
+  const history = useHistory();
   const [query, setQuery] = useState("");
   const [starSort, setStarSort ] = useState({
     stars: false
@@ -22,13 +25,14 @@ const Search = () => {
 
     const fetchData = async () => {
       const response = await fetch(
-        `http://localhost:5000/search/repositories?searchTerms=${query}+searchLang:${languages}&searchStars=${starSort}&searchScore=${score}`
+        `http://localhost:5000/search/repositories?searchTerms=${query}`
+        // `http://localhost:5000/search/repositories?searchTerms=${query}+searchLang:${languages}&searchStars=${starSort}&searchScore=${score}`
       );
       const items = await response.json();
       setItems(items.items);
     };
     fetchData()
-  }, [query, starSort, score])
+  }, [query, languages, starSort, score])
 
 
 
@@ -54,6 +58,9 @@ const Search = () => {
     return arr1.some(item => arr2.includes(item))
   }
 
+  const handleClick = (e) => {
+    history.push("/Details")
+  }
 
 
   const renderItems = () => {
@@ -93,12 +100,15 @@ const Search = () => {
       {tempArr.map (el => (
         <div key={el.id}>
           <li>Name: {el.name}, Stars: {el.stargazers_count}, Language: {el.language}</li>
+          {/* <button onClick={handleClick}>View Details</button> */}
+          <NavLink exact to="/Details">
+            Details
+          </NavLink>
         </div>
       ))}
       </ul>
     )
   }
-
 
 
   return (

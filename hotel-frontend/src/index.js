@@ -1,13 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Switch, useLocation} from "react-router-dom"
 import './index.css';
 import Search from './Search';
+import Details from "./Details";
 import * as serviceWorker from './serviceWorker';
 
+
 ReactDOM.render(
-  <React.StrictMode>
-    <Search />
-  </React.StrictMode>,
+  <Router>
+    <div>
+    <Switch>
+      <Route exact path="/" component={Search}/>
+      <Route path="/Details" component={Details}/>
+    </Switch>
+    </div>
+  </Router>,
   document.getElementById('root')
 );
 
