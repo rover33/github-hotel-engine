@@ -3,17 +3,17 @@ import React, { useState, useEffect } from "react";
 
 const Search = () => {
   // const [status, setStatus] = useState('idle')
-  const [searchString, setSearchString] = useState("")
+  const [query, setQuery] = useState("")
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     // console.log("hello")
-    // if (!query) return console.log("no query");
+    if (!query) return console.log("no query");
 
     const fetchData = async () => {
       // setStatus('fetching');
       const response = await fetch(
-        `http://localhost:5000/search/repositories?q=${searchString}`
+        `http://localhost:5000/search/repositories?searchTerms=${query}`
       );
       const items = await response.json();
       console.log(items)
@@ -23,7 +23,7 @@ const Search = () => {
       // setStatus('fetched')
     };
     fetchData()
-  }, [searchString])
+  }, [query])
 
 
 
@@ -54,7 +54,7 @@ const Search = () => {
 
     const handleChange = (e) => {
         setItems([]);
-        setSearchString(e.target.value);
+        setQuery(e.target.value);
       }
       
       const handleSubmit = (e) => {
@@ -83,7 +83,7 @@ const Search = () => {
                 className="gitSearch"
                 placeholder="search repo"
                 onChange={handleChange}
-                value={searchString}
+                value={query}
               />
             <button>Search</button>
           </form>
