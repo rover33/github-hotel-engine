@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 const Search = () => {
   // const [status, setStatus] = useState('idle')
-  const [query, setQuery] = useState("")
+  const [searchString, setSearchString] = useState("")
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const Search = () => {
     const fetchData = async () => {
       // setStatus('fetching');
       const response = await fetch(
-        `http://localhost:5000/search/repositories?q=${query}`
+        `http://localhost:5000/search/repositories?q=${searchString}`
       );
       const items = await response.json();
       console.log(items)
@@ -23,7 +23,7 @@ const Search = () => {
       // setStatus('fetched')
     };
     fetchData()
-  }, [query])
+  }, [searchString])
 
 
 
@@ -40,7 +40,7 @@ const Search = () => {
 
   //   if(query) {
   //     setItems([])
-  //     setQuery(query);
+  //     setSearchString(query);
   //     e.target.value = ""
   //   }
 
@@ -49,12 +49,12 @@ const Search = () => {
   // const onChange = e => {
   //   console.log(e.target.value)
   //       setItems([])
-  //       setQuery(e.target.value)
+  //       setSearchString(e.target.value)
   //     }
 
     const handleChange = (e) => {
         setItems([]);
-        setQuery(e.target.value);
+        setSearchString(e.target.value);
       }
       
       const handleSubmit = (e) => {
@@ -83,7 +83,7 @@ const Search = () => {
                 className="gitSearch"
                 placeholder="search repo"
                 onChange={handleChange}
-                value={query}
+                value={searchString}
               />
             <button>Search</button>
           </form>
@@ -97,91 +97,3 @@ const Search = () => {
 
 export default Search;
 
-// import useInfiniteScroll from 'react-infinite-scroll-hook';
-
-
-// const Search = () => {
-//   const [searchString, setSearchString] = useState("");
-//   const [items, setItems] = useState([]);
-//   const [hasNextPage, setHasNextPage] = useState(false);
-//   const [page, setPage] = useState(1);
-//   const [loading, setLoading] = useState(false);
-//   const [star, setStar] = useState()
-
-
-//   const handleLoadMore = () => {
-
-//     setLoading(true);
-//     fetch(
-//       `http://localhost:5000/search/repositories?q=${searchString}`
-//       // `https://api.github.com/search/repositories?q=${searchString}`
-//     )
-//     .then(res => res.json())
-//     .then(res => {
-//       //  console.log(res)
-//        setLoading(false);
-//        let total = res.total_count
-//        let current = page * 30;
-//        let hasNextPage = (current <= total);
-//        setHasNextPage(hasNextPage);
-//       //  setHasNextPage(false)
-//        setItems([...items, res.items]);
-//       //  console.log(items)
-//        setStar(star)
-//        setPage(page+1)
-//     })
-//     .catch(() => {
-//       console.log("stop it");
-//       setLoading(false);
-//     });
-//   }
-
-//   const infiniteRef = useInfiniteScroll({
-//     loading,
-//     hasNextPage,
-//     onLoadMore: handleLoadMore,
-//     // scrollContainer,
-//   });
-
-//   const renderItems = () => {
-//     if (!items || items.length <= 0 ) return
-//     return items[0].map((item) => {
-//       // console.log(item.name)
-//       return <li key={item.id}>Name: {item.name}, Stars: {item.stargazers_count}</li>
-//   })
-// }
-
-//   let onChange = e => {
-//     setItems([])
-//     setPage(0)
-//     setHasNextPage(true)
-//     setSearchString(e.target.value)
-//   }
-
-//   let handleSort = () => {
-//     // fetch(`http://localhost:4000/search/repositories?&sort=stars&order=desc`)
-//   }
-
-//   let handleClick = () => {
-//     alert("clicked")
-//   }
-
-//   return (
-//     <div>
-//       <h1 className="header">Github Search</h1>
-//       <div className="gitSearchDiv">
-//         <input
-//           type="search"
-//           className="gitSearch"
-//           placeholder="search repo"
-//           onChange={e => onChange(e)}
-//         />
-//         {/* <button onClick={handleSort()}>Sort</button> */}
-//       </div>
-//        <ul ref={infiniteRef} onClick={handleClick}>
-//         {renderItems()}
-//         {/* {loading && <li>Loading...</li>} */}
-//       </ul>
-//     </div>
-//   );
-// };
