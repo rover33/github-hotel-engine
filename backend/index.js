@@ -20,9 +20,9 @@ app.use(cors());
 
 //Middleware Function to Check Cache
 const checkCache = (req, res, next) => {
-  const { id } = req.params;
-  console.log(req)
-
+  const { searchTerms } = req.query
+  // console.log(searchTerms)
+  let id = searchTerms.replace(/[^A-Z0-9]/ig, "_");
   redis_client.get(id, (err, data) => {
     if (err) {
       console.log(err);
@@ -43,24 +43,18 @@ const checkCache = (req, res, next) => {
 //  @desc Return github data for particular search term
 app.get("/search/repositories", checkCache, async (req, res) => {
   try {
-    const { searchTerms } = req.query
+    const { searchTerms, numPages, numStars} = req.query
     console.log(searchTerms)
     const githubInfo = await axios.get(
-      `https://api.github.com/search/repositories?q=${searchTerms}`
+      `https://api.github.com/search/repositories?q=${searchTerms}&sort=${numStars}&pages=${numPages}`
     );
 
     //get data from response
     const githubSearchData = githubInfo.data;
-    console.log(githubSearchData[0])
-
-    console.log(JSON.stringify(githubSearchData))
-
-    //add data to Redis
-    redis_client.setex(searchTerms, 3600, JSON.stringify(githubSearchData));
-
-    console.log(JSON.stringify(githubSearchData))
-
     
+    let id = searchTerms.replace(/[^A-Z0-9]/ig, "_");
+    //add data to Redis
+    redis_client.setex(id, 3600, JSON.stringify(githubSearchData));
 
     return res.json(githubSearchData);
   } catch (error) {
@@ -70,5 +64,3 @@ app.get("/search/repositories", checkCache, async (req, res) => {
 });
 
 app.listen(port, () => console.log(`Server running on Port ${port}`));
-
-
