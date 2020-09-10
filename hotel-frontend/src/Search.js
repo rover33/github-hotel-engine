@@ -101,7 +101,7 @@ const Search = () => {
         <div key={el.id}>
           <li>Name: {el.name}, Stars: {el.stargazers_count}, Language: {el.language}</li>
           {/* <button onClick={handleClick}>View Details</button> */}
-          <NavLink exact to="/Details">
+          <NavLink to="/Details">
             Details
           </NavLink>
         </div>
