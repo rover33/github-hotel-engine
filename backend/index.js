@@ -4,7 +4,6 @@ const redis = require("redis");
 const axios = require("axios");
 const cors = require("cors");
 
-
 //setup port constants
 const port_redis = process.env.PORT || 6379;
 const port = process.env.PORT || 5000;
@@ -15,8 +14,17 @@ const redis_client = redis.createClient(port_redis);
 //configure express server
 const app = express();
 
+
 app.use(cors());
 
+
+// const baseUrl = "https://api.github.com/search/repositories?q="
+// const query = `${searchTerms}+language:${searchLang}&sort=${searchStars}+${searchScore}`
+
+// //encode query string
+// const encodedQuery = encodeURIComponent(query);
+// const url = baseUrl + encodedQuery
+// console.log(url)
 
 //Middleware Function to Check Cache
 const checkCache = (req, res, next) => {
@@ -29,14 +37,14 @@ const checkCache = (req, res, next) => {
   // console.log(searchTerms)
   searchTerms = searchTerms.replace(/[^A-Z0-9]/ig, "_");
   searchStars = searchStars.replace(/[^A-Z0-9]/ig, "_");
-  searchLang = searchLang.replace(/[^A-Z0-9]/ig, "_");
-  searchScore = searchScore.replace(/[^A-Z0-9]/ig, "_");
+  // searchLang = searchLang.replace(/[^A-Z0-9]/ig, "_");
+  // searchScore = searchScore.replace(/[^A-Z0-9]/ig, "_");
   console.log("+++++++++++++Cleaned Params++++++++++++")
   console.log(`SearchTerms: ${searchTerms}`)
   console.log(`SearchStars: ${searchStars}`)
   console.log(`SearchLang: ${searchLang}`)
   console.log(`SearchScore: ${searchScore}`)
-  let id = searchTerms+searchStars+searchLang+searchScore
+  let id = searchTerms+searchStars
   console.log(`ID: ${id}`)
   redis_client.get(id, (err, data) => {
     if (err) {
@@ -59,10 +67,18 @@ const checkCache = (req, res, next) => {
 app.get("/search/repositories", checkCache, async (req, res) => {
   try {
     const { searchTerms, searchStars, searchLang, searchScore} = req.query
+
+    const baseUrl = "https://api.github.com/search/repositories?q="
+    const query = `${searchTerms}+language:${searchLang}&sort=${searchStars}+${searchScore}`
+    //encode query string
+    const encodedQuery = encodeURIComponent(query);
+    const url = baseUrl + encodedQuery
+    console.log(url)
     console.log(searchTerms)
     console.log(searchStars)
+
     const githubInfo = await axios.get(
-      `https://api.github.com/search/repositories?q=${searchTerms}+language:${searchLang}&sort=${searchStars}+${searchScore}`
+      url
       // &sort=${searchStars}+${searchScore}
     );
 

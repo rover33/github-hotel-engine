@@ -41,17 +41,15 @@ const Search = () => {
     const checkBoxStarClick = e => {
       setStarSort("stars");
     }
-  // const checkBoxLanguageClick = e => {
-  //   let tempLanguage = { ...languages };
-  //   if (tempLanguage[e.target.name] !== languages[e.target.name]);
-  //   setLanguages(tempLanguage);
-  // };
 
-  // const checkBoxStarClick = e => {
-  //   let tempStars = {...starSort };
-  //   if (tempStars[e.target.name] !== starSort[e.target.name]) return;
-  //   setStarSort(tempStars);
-  // }
+    const checkSearchScoreClick = e => {
+      setScore("!")
+    }
+
+    const checkBoxLanguageClick = e => {
+      setLanguages("python")
+    }
+
 
 
   const renderItems = () => {
@@ -100,7 +98,7 @@ const Search = () => {
               type="checkbox"
               id="score"
               name="score"
-              // onClick={e => checkBoxTypeClick(e)}
+              onClick={checkSearchScoreClick}
             >
             </input>
           </div>
@@ -114,7 +112,7 @@ const Search = () => {
               type="checkbox"
               id="Python"
               name="Python"
-              // onClick={e => checkBoxLanguageClick(e)}
+              onClick={checkBoxLanguageClick}
             >
             </input>
             <label>JavaScript</label>
