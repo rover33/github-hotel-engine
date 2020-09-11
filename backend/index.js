@@ -37,14 +37,14 @@ const checkCache = (req, res, next) => {
   // console.log(searchTerms)
   searchTerms = searchTerms.replace(/[^A-Z0-9]/ig, "_");
   searchStars = searchStars.replace(/[^A-Z0-9]/ig, "_");
-  // searchLang = searchLang.replace(/[^A-Z0-9]/ig, "_");
-  // searchScore = searchScore.replace(/[^A-Z0-9]/ig, "_");
+  searchLang = searchLang.replace(/[^A-Z0-9]/ig, "_");
+  searchScore = searchScore.replace(/[^A-Z0-9]/ig, "_");
   console.log("+++++++++++++Cleaned Params++++++++++++")
   console.log(`SearchTerms: ${searchTerms}`)
   console.log(`SearchStars: ${searchStars}`)
   console.log(`SearchLang: ${searchLang}`)
   console.log(`SearchScore: ${searchScore}`)
-  let id = searchTerms+searchStars
+  let id = searchTerms + searchStars + searchScore + searchLang
   console.log(`ID: ${id}`)
   redis_client.get(id, (err, data) => {
     if (err) {
