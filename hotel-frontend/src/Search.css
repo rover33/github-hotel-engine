@@ -1,38 +1,47 @@
-.App {
-  text-align: center;
-}
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.header {
+  color: black;
   display: flex;
+  justify-content: center;
+}
+
+.gitSearchDiv {
+  display: flex;
+  justify-content: center;
+}
+
+
+.langCheckBoxes,
+.starsContainer {
+  text-align: center;
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+
+.checkBoxes {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.langCheck,
+.starbox {
+  margin-right: 1rem;
+}
+
+.listResults {
+  border-radius: 4px;
+  box-shadow: 0 0 6px 2px rgba(0,0,0,0.2);
+  width: 25rem;
+  padding: 1rem;
+  margin-top: 1rem;
   flex-direction: column;
+  display: flex
+}
+
+
+.searchList {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

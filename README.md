@@ -22,5 +22,5 @@ For the design I just went real simple and did not want to go crazy.
 
 ### Things I wish I had spend more time on.
 ```
-I wanted to spend more time also learning context so that I could easly move the data around to everywhere I needed. I did not get to passing the data on a single list item to a new page. Overall I am happy, but I want to dig deeper and learn more.
+I wanted to spend more time also learning context so that I could easly move the data around to everywhere I needed. I did not get to passing the data on a single list item to a new page. 
 ```

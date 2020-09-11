@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import "./Search.css";
 
 
 const Search = () => {
@@ -66,11 +67,27 @@ const Search = () => {
       return items.map((item) => {
         // console.log(item.name)
         return (
-        <div key={item.id}>
-          <li>Name: {item.name}, Stars: {item.stargazers_count}, Language: {item.language}, Score: {item.score}</li>
+        <div key={item.id} className="searchList">
+          <li className="listResults">
+            Name: {item.name}
+            <br />
+            <br />
+            Language: {item.language}
+            <br /> 
+            <br />
+            Stars: {item.stargazers_count}
+            <br />
+            <br />
+            Score: {item.score}
+            <br />
+            <br />
+            Forks: {item.forks}
+            <br />
+            <br />
             <NavLink to="/Details">
               Details
             </NavLink>
+          </li>
         </div>
         )
     })
@@ -80,22 +97,26 @@ const Search = () => {
   return (
       <div>
         <h1 className="header">Github Search</h1>
-        <form className="Form">
-          <input
-              type="text"
-              autoFocus
-              className="gitSearch"
-              placeholder="search repo"
-              onChange={handleChange}
-              value={query}
-            />
-        </form>
+        <div className="gitSearchDiv"> 
+          <form className="Form"> 
+            <input
+                type="text"
+                autoFocus
+                className="gitSearch"
+                placeholder="search repo"
+                onChange={handleChange}
+                value={query}
+              />
+          </form>
+        </div>
         <div className="checkBoxes">
-          <div>
+          <div className="starsContainer">
             Sort By:
+            <br/>
             <br/>
             <label>Stars:</label>
             <input
+              className="starbox"
               type="checkbox"
               id="stars"
               name="stars"
@@ -104,6 +125,7 @@ const Search = () => {
             </input>
             <label>Score:</label>
             <input
+              className="starbox"
               type="checkbox"
               id="score"
               name="score"
@@ -115,9 +137,11 @@ const Search = () => {
           <br/>
           <div className="langCheckBoxes">
             Languages: 
-            <br />
+            <br/>
+            <br/>
             <label>Python</label>
             <input
+              className="langCheck"
               type="checkbox"
               id="Python"
               name="Python"
@@ -126,6 +150,7 @@ const Search = () => {
             </input>
             <label>JavaScript</label>
             <input
+              className="langCheck"
               type="checkbox"
               id="JavaScript"
               name="JavaScript"
@@ -134,9 +159,9 @@ const Search = () => {
             </input>
           </div>
         </div>
-        <ul>
+        <div className="gitList">
           {renderItems()}
-        </ul>
+        </div>
       </div>
     );
   };
