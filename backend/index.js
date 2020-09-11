@@ -20,9 +20,24 @@ app.use(cors());
 
 //Middleware Function to Check Cache
 const checkCache = (req, res, next) => {
-  const { searchTerms } = req.query
+  let { searchTerms, searchStars, searchLang, searchScore } = req.query
+  console.log(`SearchTerms: ${searchTerms}`)
+  console.log(`SearchStars: ${searchStars}`)
+  console.log(`SearchLang: ${searchLang}`)
+  console.log(`SearchScore: ${searchScore}`)
+  // const { searchTerms, searchLang, searchStars, searchScore } = req.query
   // console.log(searchTerms)
-  let id = searchTerms.replace(/[^A-Z0-9]/ig, "_");
+  searchTerms = searchTerms.replace(/[^A-Z0-9]/ig, "_");
+  searchStars = searchStars.replace(/[^A-Z0-9]/ig, "_");
+  searchLang = searchLang.replace(/[^A-Z0-9]/ig, "_");
+  searchScore = searchScore.replace(/[^A-Z0-9]/ig, "_");
+  console.log("+++++++++++++Cleaned Params++++++++++++")
+  console.log(`SearchTerms: ${searchTerms}`)
+  console.log(`SearchStars: ${searchStars}`)
+  console.log(`SearchLang: ${searchLang}`)
+  console.log(`SearchScore: ${searchScore}`)
+  let id = searchTerms+searchStars+searchLang+searchScore
+  console.log(`ID: ${id}`)
   redis_client.get(id, (err, data) => {
     if (err) {
       console.log(err);
@@ -43,18 +58,25 @@ const checkCache = (req, res, next) => {
 //  @desc Return github data for particular search term
 app.get("/search/repositories", checkCache, async (req, res) => {
   try {
-    const { searchTerms, searchScore, searchStars, searchLang} = req.query
+    const { searchTerms, searchStars, searchLang, searchScore} = req.query
     console.log(searchTerms)
+    console.log(searchStars)
     const githubInfo = await axios.get(
-      `https://api.github.com/search/repositories?q=${searchTerms}+language:${searchLang}&sort=${searchStars}&sort=${searchScore}`
+      `https://api.github.com/search/repositories?q=${searchTerms}+language:${searchLang}&sort=${searchStars}+${searchScore}`
+      // &sort=${searchStars}+${searchScore}
     );
 
     //get data from response
     const githubSearchData = githubInfo.data;
     
     let id = searchTerms.replace(/[^A-Z0-9]/ig, "_");
+    let stard = searchStars.replace(/[^A-Z0-9]/ig, "_");
+    // let lang = searchLang.replace(/[^A-Z0-9]/ig, "_");
+    // let score = searchScore.replace(/[^A-Z0-9]/ig, "_");
+    let  clean = id + stard
+    console.log(clean)
     //add data to Redis
-    redis_client.setex(id, 3600, JSON.stringify(githubSearchData));
+    redis_client.setex(clean, 3600, JSON.stringify(githubSearchData));
 
     return res.json(githubSearchData);
   } catch (error) {

@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, Route, Router, Link, NavLink } from "react-router-dom";
-import Details from "./Details";
+import { useHistory, NavLink } from "react-router-dom";
 
 
 const Search = () => {
   const history = useHistory();
   const [query, setQuery] = useState("");
-  const [starSort, setStarSort ] = useState({
-    stars: false
-  });
+  const [starSort, setStarSort ] = useState("");
   const [score, setScore ] = useState("");
   const [items, setItems] = useState([]);
-  const [languages, setLanguages] = useState({
-    JavaScript: false,
-    Python: false, 
-    Ruby: false,
-    Java: false,
-    Swift: false
-  });
+  const [languages, setLanguages] = useState("");
 
   useEffect(() => {
     // console.log("hello")
@@ -25,14 +16,14 @@ const Search = () => {
 
     const fetchData = async () => {
       const response = await fetch(
-        `http://localhost:5000/search/repositories?searchTerms=${query}`
-        // `http://localhost:5000/search/repositories?searchTerms=${query}+searchLang:${languages}&searchStars=${starSort}&searchScore=${score}`
+        `http://localhost:5000/search/repositories?searchTerms=${query}+searchLang:${languages}&searchStars=${starSort}+${score}&order=desc`
+        
       );
       const items = await response.json();
       setItems(items.items);
     };
     fetchData()
-  }, [query, languages, starSort, score])
+  }, [query, languages, starSort])
 
 
 
@@ -42,72 +33,40 @@ const Search = () => {
       setQuery(e.target.value);
     }
   
-  const checkBoxLanguageClick = e => {
-    let tempLanguage = { ...languages };
-    if (tempLanguage[e.target.name] !== languages[e.target.name]);
-    setLanguages(tempLanguage);
-  };
 
-  const checkBoxStarClick = e => {
-    let tempStars = {...starSort };
-    if (tempStars[e.target.name] !== starSort[e.target.name]) return;
-    setStarSort(tempStars);
-  }
+    // const checkBoxLanguageClick = e => {  
+    //   setLanguages(languages)
+    // }
 
-  const checkIfType = (arr1, arr2) => {
-    return arr1.some(item => arr2.includes(item))
-  }
+    const checkBoxStarClick = e => {
+      setStarSort("stars");
+    }
+  // const checkBoxLanguageClick = e => {
+  //   let tempLanguage = { ...languages };
+  //   if (tempLanguage[e.target.name] !== languages[e.target.name]);
+  //   setLanguages(tempLanguage);
+  // };
 
-  const handleClick = (e) => {
-    history.push("/Details")
-  }
+  // const checkBoxStarClick = e => {
+  //   let tempStars = {...starSort };
+  //   if (tempStars[e.target.name] !== starSort[e.target.name]) return;
+  //   setStarSort(tempStars);
+  // }
 
 
   const renderItems = () => {
-    let { Python, JavaScript, Ruby, Java, Swift} = languages;
-    let { stars } = starSort;
-    let tempArr = new Set();
-    let langArr = [];
-    let starArr = [];
-    if (Python) langArr.push("Python");
-    if (JavaScript) langArr.push("JavaScript");
-    if (Java) langArr.push("Java")
-    if (Ruby) langArr.push("Ruby");
-    if (Swift) langArr.push("Swift")
-    if ( stars ) starArr.push("stars")
-    if(
-      langArr.length <= 0 && starArr.length <= 0 && query.length <= 0){
-      tempArr = items;
-    } else {
-      for (let i = 0; i < items.length; i++) {
-        if (
-          query.length > 0 && items[i].name.toLowerCase().includes(query)) {
-            tempArr.add(items[i]);
-          }
-        if (langArr.length > 0 && checkIfType(langArr, items[i].language)){
-          tempArr.add(items[i])
-        }
-        if (starArr.length > 0 && checkIfType(starArr, items[i].stargazers_count)){
-          tempArr.add(items[i])
-        }
-      }
-    }
-
-    tempArr = Array.from(tempArr)
-
-    return (
-      <ul>
-      {tempArr.map (el => (
-        <div key={el.id}>
-          <li>Name: {el.name}, Stars: {el.stargazers_count}, Language: {el.language}</li>
-          {/* <button onClick={handleClick}>View Details</button> */}
-          <NavLink to="/Details">
-            Details
-          </NavLink>
+    if (!items || items.length <= 0 ) return
+      return items.map((item) => {
+        // console.log(item.name)
+        return (
+        <div key={item.id}>
+          <li>Name: {item.name}, Stars: {item.stargazers_count}, Language: {item.language}</li>
+            <NavLink to="/Details">
+              Details
+            </NavLink>
         </div>
-      ))}
-      </ul>
-    )
+        )
+    })
   }
 
 
@@ -133,7 +92,7 @@ const Search = () => {
               type="checkbox"
               id="stars"
               name="stars"
-              onClick={e => checkBoxStarClick(e)}
+              onClick={checkBoxStarClick}
             >
             </input>
             <label>Score:</label>
@@ -155,7 +114,7 @@ const Search = () => {
               type="checkbox"
               id="Python"
               name="Python"
-              onClick={e => checkBoxLanguageClick(e)}
+              // onClick={e => checkBoxLanguageClick(e)}
             >
             </input>
             <label>JavaScript</label>
