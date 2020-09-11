@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch, useLocation} from "react-router-dom"
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import './index.css';
 import Search from './Search';
 import Details from "./Details";

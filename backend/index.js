@@ -53,7 +53,7 @@ app.get("/search/repositories", checkCache, async (req, res) => {
     let { searchTerms, searchStars, searchLang, searchScore} = req.query
 
     const githubInfo = await axios.get(
-      `https://api.github.com/search/repositories?q=${searchTerms}+language:${searchLang}&sort=${searchStars}+${searchScore}`
+      `https://api.github.com/search/repositories?q=${searchTerms}+language:${searchLang}&sort=${searchStars}+${searchScore}&order=desc`
     );
 
     //get data from response

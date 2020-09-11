@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, cloneElement } from "react";
 import { NavLink } from "react-router-dom";
 
 
 const Search = () => {
   const [query, setQuery] = useState("");
-  const [starSort, setStarSort ] = useState("");
+  const [starSort, setStarSort ] = useState("stars");
   const [score, setScore ] = useState("");
   const [items, setItems] = useState([]);
   const [languages, setLanguages] = useState("");
 
   useEffect(() => {
-    // console.log("hello")
     if (!query) return;
 
     const fetchData = async () => {
@@ -33,10 +32,6 @@ const Search = () => {
     }
   
 
-    // const checkBoxLanguageClick = e => {  
-    //   setLanguages(languages)
-    // }
-
     const checkBoxStarClick = e => {
       setStarSort("stars");
     }
@@ -48,7 +43,6 @@ const Search = () => {
     const checkBoxLanguageClick = e => {
       setLanguages("python")
     }
-
 
 
   const renderItems = () => {
@@ -89,6 +83,7 @@ const Search = () => {
               type="checkbox"
               id="stars"
               name="stars"
+              value={starSort}
               onClick={checkBoxStarClick}
             >
             </input>
@@ -119,30 +114,6 @@ const Search = () => {
               type="checkbox"
               id="JavaScript"
               name="JavaScript"
-              // onClick={e => checkBoxLanguageClick(e)}
-            >
-            </input>
-            <label>Ruby</label>
-            <input
-              type="checkbox"
-              id="Ruby"
-              name="Ruby"
-              // onClick={e => checkBoxLanguageClick(e)}
-            >
-            </input>
-            <label>Swift</label>
-            <input
-              type="checkbox"
-              id="Swift"
-              name="Swift"
-              // onClick={e => checkBoxLanguageClick(e)}
-            >
-            </input>
-            <label>Java</label>
-            <input
-              type="checkbox"
-              id="Java"
-              name="Java"
               // onClick={e => checkBoxLanguageClick(e)}
             >
             </input>
