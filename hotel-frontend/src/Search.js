@@ -1,4 +1,4 @@
-import React, { useState, useEffect, cloneElement } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 
@@ -9,10 +9,12 @@ const Search = () => {
   const [items, setItems] = useState([]);
   const [languages, setLanguages] = useState("");
 
+
   useEffect(() => {
     let isCancelled = true;
     if (!query) return;
     
+    console.log(starSort)
 
     const fetchData = async () => {
       const response = await fetch(
@@ -21,13 +23,14 @@ const Search = () => {
       );
       const items = await response.json();
       if (isCancelled) setItems(items.items);
+
+      console.log(starSort)
     };
     fetchData();
 
     return () => {
       isCancelled = false;
     };
-
   }, [query, languages, starSort, score])
 
 
@@ -42,7 +45,7 @@ const Search = () => {
     }
   
 
-    const checkBoxStarClick = () => {
+    const checkBoxStarClick = (e) => {
       setStarSort("stars");
     }
 
@@ -50,10 +53,13 @@ const Search = () => {
       setScore("1")
     }
 
-    const checkBoxLanguageClick = () => {
+    const checkBoxLanguageClick = (e) => {
       setLanguages("python")
     }
 
+    const checkBoxLanguageJSClick = () => {
+      setLanguages("javascript")
+    }
 
   const renderItems = () => {
     if (!items || items.length <= 0 ) return
@@ -123,11 +129,10 @@ const Search = () => {
               type="checkbox"
               id="JavaScript"
               name="JavaScript"
-              // onClick={e => checkBoxLanguageClick(e)}
+              onClick={checkBoxLanguageJSClick}
             >
             </input>
           </div>
-
         </div>
         <ul>
           {renderItems()}
