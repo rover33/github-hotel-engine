@@ -4,13 +4,15 @@ import { NavLink } from "react-router-dom";
 
 const Search = () => {
   const [query, setQuery] = useState("");
-  const [starSort, setStarSort ] = useState("stars");
+  const [starSort, setStarSort ] = useState("");
   const [score, setScore ] = useState("");
   const [items, setItems] = useState([]);
   const [languages, setLanguages] = useState("");
 
   useEffect(() => {
+    let isCancelled = true;
     if (!query) return;
+    
 
     const fetchData = async () => {
       const response = await fetch(
@@ -18,9 +20,14 @@ const Search = () => {
         
       );
       const items = await response.json();
-      setItems(items.items);
+      if (isCancelled) setItems(items.items);
     };
-    fetchData()
+    fetchData();
+
+    return () => {
+      isCancelled = false;
+    };
+
   }, [query, languages, starSort, score])
 
 
@@ -28,19 +35,22 @@ const Search = () => {
 
   const handleChange = (e) => {
       setItems([]);
+      setStarSort("")
+      setLanguages("")
+      setScore("")
       setQuery(e.target.value);
     }
   
 
-    const checkBoxStarClick = e => {
+    const checkBoxStarClick = () => {
       setStarSort("stars");
     }
 
-    const checkSearchScoreClick = e => {
+    const checkSearchScoreClick = () => {
       setScore("1")
     }
 
-    const checkBoxLanguageClick = e => {
+    const checkBoxLanguageClick = () => {
       setLanguages("python")
     }
 
@@ -83,7 +93,6 @@ const Search = () => {
               type="checkbox"
               id="stars"
               name="stars"
-              value={starSort}
               onClick={checkBoxStarClick}
             >
             </input>
