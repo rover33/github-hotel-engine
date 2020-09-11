@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 
 const Search = () => {
-  const history = useHistory();
   const [query, setQuery] = useState("");
   const [starSort, setStarSort ] = useState("");
   const [score, setScore ] = useState("");
@@ -16,14 +15,14 @@ const Search = () => {
 
     const fetchData = async () => {
       const response = await fetch(
-        `http://localhost:5000/search/repositories?searchTerms=${query}+searchLang:${languages}&searchStars=${starSort}+${score}&order=desc`
+        `http://localhost:5000/search/repositories?searchTerms=${query}&searchLang=${languages}&searchStars=${starSort}&searchScore=${score}&order=desc`
         
       );
       const items = await response.json();
       setItems(items.items);
     };
     fetchData()
-  }, [query, languages, starSort])
+  }, [query, languages, starSort, score])
 
 
 
@@ -43,7 +42,7 @@ const Search = () => {
     }
 
     const checkSearchScoreClick = e => {
-      setScore("!")
+      setScore("1")
     }
 
     const checkBoxLanguageClick = e => {
@@ -58,7 +57,7 @@ const Search = () => {
         // console.log(item.name)
         return (
         <div key={item.id}>
-          <li>Name: {item.name}, Stars: {item.stargazers_count}, Language: {item.language}</li>
+          <li>Name: {item.name}, Stars: {item.stargazers_count}, Language: {item.language}, Score: {item.score}</li>
             <NavLink to="/Details">
               Details
             </NavLink>
